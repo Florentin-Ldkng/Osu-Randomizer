@@ -83,7 +83,8 @@ namespace OsuRandomizer.Modules
                 .WithColor(Color.Green)
                 .WithDescription("Twitter: https://twitter.com/de_mmxiv " +
                                  "\nTwitch: https://www.twitch.tv/de_mmxiv " +
-                                 "\nYoutube: https://www.youtube.com/channel/UCgrmRtHzT4yL39hHgd7TULQ");
+                                 "\nYoutube: https://www.youtube.com/channel/UCgrmRtHzT4yL39hHgd7TULQ " +
+                                 "\nGithub: https://github.com/de-MMXIV");
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
@@ -113,15 +114,11 @@ namespace OsuRandomizer.Modules
         public async Task Changelog()
         {
             var embed = new EmbedBuilder();
-            embed.WithTitle("Changelog ("+ System.DateTime.Today.ToShortDateString()+"): ")
+            embed.WithTitle("Changelog (05.04.2020): ")
                 .WithColor(Color.Blue)
-                .WithDescription("Created the Bot\n" +
-                                 "Added changelog Command\n" +
-                                 "Added downtime Command\n" +
-                                 "Added creator Command\n" +
-                                 "Added request Command\n" +
-                                 "Added rng Command\n" +
-                                 "Started The Database");
+                .WithDescription("Stocked up the Database to x Songs " +
+                                 "\n Created .feedback command" +
+                                 "\n Fixed typos in Commands");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
@@ -163,7 +160,19 @@ namespace OsuRandomizer.Modules
                 .AddField(".database", "Shows you the Amount of Songs that are in the DataBase")
                 .AddField(".downtime", "Shows you when the Bot will be down because of Maintenance")
                 .AddField(".changelog", "Gets you the latest Changes")
-                .AddField(".creator", "The Guy programmed the bot and some social media links");
+                .AddField(".feedback", "Ways to give Feedback or report Bugs")
+                .AddField(".creator", "The Guy who programmed the bot and some social media links");
+            await Context.Channel.SendMessageAsync(null, false, embed.Build());
+        }
+
+        [Command("feedback")]
+        public async Task Feedback()
+        {
+            var embed = new EmbedBuilder();
+            embed.WithColor(Color.Blue)
+                .WithTitle("Feedback:")
+                .WithDescription("You can send me feedback or bugreports by @ing me on twitter \n" +
+                                 "https://twitter.com/de_mmxiv");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
         /// <summary>
