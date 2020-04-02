@@ -117,8 +117,9 @@ namespace OsuRandomizer.Modules
             embed.WithTitle("Changelog (05.04.2020): ")
                 .WithColor(Color.Blue)
                 .WithDescription("Stocked up the Database to x Songs " +
-                                 "\n Created .feedback command" +
-                                 "\n Fixed typos in Commands");
+                                 "\nCreated .feedback command" +
+                                 "\nFixed typos in Commands" +
+                                 "\nAdded Total Maps to DataBase");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
@@ -132,7 +133,8 @@ namespace OsuRandomizer.Modules
             var embed = new EmbedBuilder();
             embed.WithTitle("Database(" + System.DateTime.Today.ToShortDateString() +")")
                 .WithColor(Color.Blue)
-                .WithDescription("1 Star : " + _jsonDataBase.Star1.Count + "\n" +
+                .WithDescription("Total Beatmaps: " + (_jsonDataBase.Star1.Count + _jsonDataBase.Star2.Count+ _jsonDataBase.Star3.Count+ _jsonDataBase.Star4.Count+ _jsonDataBase.Star5.Count+ _jsonDataBase.Star6.Count+ _jsonDataBase.Star7.Count+ _jsonDataBase.Star8.Count+ _jsonDataBase.Star9.Count+ _jsonDataBase.Star10.Count)+"\n" +
+                                 "1 Star : " + _jsonDataBase.Star1.Count + "\n" +
                                  "2 Star : " + _jsonDataBase.Star2.Count + "\n" +
                                  "3 Star : " + _jsonDataBase.Star3.Count + "\n" +
                                  "4 Star : " + _jsonDataBase.Star4.Count + "\n" +
