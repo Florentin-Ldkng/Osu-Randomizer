@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
@@ -14,6 +13,7 @@ namespace OsuRandomizer.Modules
     public class Commands : ModuleBase<SocketCommandContext>
     {
         private DataBase _jsonDataBase = JsonConvert.DeserializeObject<DataBase>(File.ReadAllText(@"D:\Osu! Randomizer\DataBase.json"));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         Regex reg = new Regex("https?:\\/\\/osu.ppy.sh\\/beatmapsets\\/[0123456789]+\\#osu(\\/[0123456789]+)");
         Stopwatch stopwatch = new Stopwatch();
         private TimeSpan ts;
@@ -39,7 +39,7 @@ namespace OsuRandomizer.Modules
              await Context.Channel.SendMessageAsync(null, false, embed.Build());
              stopwatch.Stop();
              ts = stopwatch.Elapsed;
-             Console.WriteLine("User: " + Context.User.Username + " | Guild: " + Context.Guild.Name + " | TDownloads: " + _jsonDataBase.Downloads + " | Timing: " + ts.Milliseconds + "ms");
+             log.Info("User: " + Context.User.Username + " | Guild: " + Context.Guild.Name + " | TDownloads: " + _jsonDataBase.Downloads + " | Timing: " + ts.Milliseconds + "ms");
 
         }
         
