@@ -18,7 +18,6 @@ namespace OsuRandomizerTool
         public List<string> Star9 = new List<string>();
         public List<string> Star10 = new List<string>();
         public List<string> Requests = new List<string>();
-        public int Downloads;
 
         public void SetRandomMap(string beatmap, int star)
         {

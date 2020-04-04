@@ -13,6 +13,7 @@ namespace OsuRandomizer.Modules
     public class Commands : ModuleBase<SocketCommandContext>
     {
         private DataBase _jsonDataBase = JsonConvert.DeserializeObject<DataBase>(File.ReadAllText(@"D:\Osu! Randomizer\DataBase.json"));
+        private Downloads _downloads = JsonConvert.DeserializeObject<Downloads>(File.ReadAllText(@"D:\Osu! Randomizer\Downloads.json"));
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         Regex reg = new Regex("https?:\\/\\/osu.ppy.sh\\/beatmapsets\\/[0123456789]+\\#osu(\\/[0123456789]+)");
         Stopwatch stopwatch = new Stopwatch();
@@ -29,7 +30,7 @@ namespace OsuRandomizer.Modules
         public async Task Rnd(int stars)
         {
             stopwatch.Start();
-            _jsonDataBase.Downloads++;
+            _downloads.TDownloads++;
              Serialize();
              var starEmoji = new Emoji("\U0001f31f");
              var embed = new EmbedBuilder( );
@@ -39,7 +40,7 @@ namespace OsuRandomizer.Modules
              await Context.Channel.SendMessageAsync(null, false, embed.Build());
              stopwatch.Stop();
              ts = stopwatch.Elapsed;
-             log.Info("User: " + Context.User.Username + " | Guild: " + Context.Guild.Name + " | TDownloads: " + _jsonDataBase.Downloads + " | Timing: " + ts.Milliseconds + "ms");
+             log.Info("User: " + Context.User.Username + " | Guild: " + Context.Guild.Name + " | TDownloads: " + _downloads.TDownloads + " | Timing: " + ts.Milliseconds + "ms");
 
         }
         
@@ -195,6 +196,7 @@ namespace OsuRandomizer.Modules
         private void Serialize()
         {
             File.WriteAllText(@"D:\Osu! Randomizer\DataBase.json", JsonConvert.SerializeObject(_jsonDataBase));
+            File.WriteAllText(@"D:\Osu! Randomizer\Downloads.json", JsonConvert.SerializeObject(_downloads));
         }
     }
 }
