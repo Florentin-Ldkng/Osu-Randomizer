@@ -126,10 +126,10 @@ namespace OsuRandomizer.Modules
             var embed = new EmbedBuilder();
             embed.WithTitle("Changelog (05.04.2020): ")
                 .WithColor(Color.Blue)
-                .WithDescription("Stocked up the Database to x Songs " +
+                .WithDescription("Added Logs" +
                                  "\nCreated .feedback command" +
                                  "\nFixed typos in Commands" +
-                                 "\nAdded Total Maps to DataBase");
+                                 "\nAdded Total Maps to .database Command");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
