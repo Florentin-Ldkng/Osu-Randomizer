@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Discord;
@@ -13,6 +15,10 @@ namespace OsuRandomizer.Modules
     {
         private DataBase _jsonDataBase = JsonConvert.DeserializeObject<DataBase>(File.ReadAllText(@"D:\Osu! Randomizer\DataBase.json"));
         Regex reg = new Regex("https?:\\/\\/osu.ppy.sh\\/beatmapsets\\/[0123456789]+\\#osu(\\/[0123456789]+)");
+        Stopwatch stopwatch = new Stopwatch();
+        private TimeSpan ts;
+        private float timing;
+        private float startTiming;
 
         /// <summary>
         /// Spits out a random beatmap of the wanted difficulty
@@ -22,8 +28,8 @@ namespace OsuRandomizer.Modules
         [Command("rnd")]
         public async Task Rnd(int stars)
         {
-            Serialize();
-             _jsonDataBase.Downloads++;
+            stopwatch.Start();
+            _jsonDataBase.Downloads++;
              Serialize();
              var starEmoji = new Emoji("\U0001f31f");
              var embed = new EmbedBuilder( );
@@ -31,6 +37,10 @@ namespace OsuRandomizer.Modules
                  .WithDescription("Heres your Beatmap " + Context.User.Mention + "\n " + _jsonDataBase.GetRandomMap(stars))
                  .WithColor(Color.Green);
              await Context.Channel.SendMessageAsync(null, false, embed.Build());
+             stopwatch.Stop();
+             ts = stopwatch.Elapsed;
+             Console.WriteLine("User: " + Context.User.Username + " | Guild: " + Context.Guild.Name + " | TDownloads: " + _jsonDataBase.Downloads + " | Timing: " + ts.Milliseconds + "ms");
+
         }
         
         /// <summary>
