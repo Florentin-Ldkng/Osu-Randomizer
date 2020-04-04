@@ -184,7 +184,9 @@ namespace OsuRandomizer.Modules
             embed.WithColor(Color.Blue)
                 .WithTitle("Feedback:")
                 .WithDescription("You can send me feedback or bugreports by @ing me on twitter \n" +
-                                 "https://twitter.com/de_mmxiv");
+                                 "https://twitter.com/de_mmxiv" +
+                                 "\nOr by adding me on Discord" +
+                                 "\nMMXIV#8768");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
         /// <summary>
