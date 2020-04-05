@@ -1,6 +1,6 @@
 # Osu! Randomizer
-Welcome to the second Version of the Osu! Randomizer.
-
+Welcome to the second Version of the Osu! Randomizer.  
+You don't need to host Osu! Randomizer, just invite the bot to your server and hes up and running!  
 The Bot is written in C#
 
 ### What is Osu! Randomizer
