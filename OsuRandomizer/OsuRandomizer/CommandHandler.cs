@@ -8,6 +8,7 @@ namespace OsuRandomizer
 {
     public class CommandHandler
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private DiscordSocketClient _client;
         private CommandService _service;
         public CommandHandler(DiscordSocketClient client)
@@ -20,11 +21,11 @@ namespace OsuRandomizer
 
         private async Task HandleCommandAsync(SocketMessage s)
         {
+            
             var msg = s as SocketUserMessage;
             if (msg == null) return;
 
             var context = new SocketCommandContext(_client, msg);
-
             int argPos = 0;
             if (msg.HasCharPrefix('.',ref argPos))
             {
