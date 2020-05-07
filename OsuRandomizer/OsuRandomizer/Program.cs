@@ -21,7 +21,6 @@ namespace OsuRandomizer
             stopwatch.Start();   
             _client = new DiscordSocketClient();
             log.Info("Logging in...");
-            
             await _client.LoginAsync(TokenType.Bot, "");
             log.Info("Logged in");
             await _client.StartAsync();
