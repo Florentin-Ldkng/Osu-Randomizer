@@ -1,7 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using DevExpress.Xpo;
+using DevExpress.Xpo.DB;
 using Discord;
 using Discord.WebSocket;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace OsuRandomizer
@@ -18,7 +19,8 @@ namespace OsuRandomizer
 
         public async Task StartAsync()
         {
-            stopwatch.Start();   
+            stopwatch.Start();
+            XpoDefault.DataLayer = XpoDefault.GetDataLayer(MySqlConnectionProvider.CreateConnection(""), AutoCreateOption.None);
             _client = new DiscordSocketClient();
             log.Info("Logging in...");
             await _client.LoginAsync(TokenType.Bot, "");
