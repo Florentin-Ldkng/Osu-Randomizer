@@ -11,6 +11,3 @@ Only the `.rnd` usage gets logged.
 `Timing of the Command`: The time it took for the command to execute.  
 
 #### Example Log: `2020-04-04 16:29:19,466 INFO - User: MMXIV | Guild: skrt | TDownloads: 77 | Timing: 260ms`
-
-### Log Storage:
-Logs are stored for 14 Days.
