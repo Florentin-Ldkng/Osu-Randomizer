@@ -56,13 +56,13 @@ namespace OsuRandomizer.Modules
         public async Task Creator()
         {
             EmbedAuthorBuilder exampleAuthor = new EmbedAuthorBuilder()
-                .WithName("MMXIV")
-                .WithIconUrl("https://cdn.discordapp.com/avatars/233946992185704450/11d04a3f77879f2f4c61cd75b29c1d43.png?size=128");
+                .WithName("Suchtpatient")
+                .WithIconUrl("https://cdn.discordapp.com/avatars/233946992185704450/58bad2c3c32ec804d803edc85bdb29f4.png?size=2048");
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor(exampleAuthor)
             .WithColor(Color.Green)
-            .WithDescription("Twitter: https://twitter.com/de_mmxiv " +
-                             "\nTwitch: https://www.twitch.tv/de_mmxiv " +
+            .WithDescription("Twitter: https://twitter.com/SuchtpatientTTV " +
+                             "\nTwitch: https://www.twitch.tv/suchtpatient " +
                              "\nYoutube: https://www.youtube.com/channel/UCgrmRtHzT4yL39hHgd7TULQ " +
                              "\nGithub: https://github.com/de-MMXIV");
 
@@ -76,13 +76,12 @@ namespace OsuRandomizer.Modules
         public async Task Changelog()
         {
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("Changelog (28.06.2020): ")
+            embed.WithTitle("Changelog (03.12.2020): ")
                 .WithColor(Color.Blue)
-                .WithDescription("Removed .downtime Command" +
-                                 "\nRemoved .request Command" +
-                                 "\nChanged .commands Command" +
-                                 "\nChanged Database Structure(json -> MySQL)" +
-                                 "\nUpdated Database to the newest Data Dump");
+                .WithDescription("Changed Names in .creator\n" +
+                                 "Changed Links in .creator\n" +
+                                 "Changed Names in .feedback\n" +
+                                 "Changed Link in .feedback");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
@@ -147,9 +146,9 @@ namespace OsuRandomizer.Modules
             embed.WithColor(Color.Blue)
                 .WithTitle("Feedback:")
                 .WithDescription("You can send me feedback or bugreports by @ing me on twitter \n" +
-                                 "https://twitter.com/de_mmxiv" +
+                                 "https://twitter.com/SuchtpatientTTV" +
                                  "\nOr by adding me on Discord" +
-                                 "\nMMXIV#8768");
+                                 "\nSuchtpatient#8768");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
     }
