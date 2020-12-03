@@ -4,8 +4,7 @@ You don't need to host Osu! Randomizer yourself, just invite the bot to your ser
 The Bot is written in C#
 
 ### What is Osu! Randomizer
-Osu! Randomizer is a Discord Bot designed to allow you easier access to random Beatmaps.  
-Keep in mind that the DataBase is not finished yet and will be growing over time!  
+Osu! Randomizer is a Discord Bot designed to allow you easier access to random Beatmaps.
 Get Osu! Randomizer [here](https://discordapp.com/oauth2/authorize?client_id=654332742061916161&permissions=84992&scope=bot)!
 
 
