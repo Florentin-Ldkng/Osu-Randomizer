@@ -42,7 +42,7 @@ namespace OsuRandomizer.Modules
 
                 stopwatch.Stop();
                 _ts = stopwatch.Elapsed;
-                log.Info("User: " + Context.User.Username + " | Guild: " + Context.Guild.Name + " | Timing: " + _ts.Milliseconds + "ms");
+                log.Info($"Download at {DateTime.Now} | Timing: " + _ts.Milliseconds + "ms");
             }
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
