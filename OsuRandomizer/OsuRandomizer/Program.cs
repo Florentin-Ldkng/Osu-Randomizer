@@ -20,10 +20,10 @@ namespace OsuRandomizer
         public async Task StartAsync()
         {
             stopwatch.Start();
-            XpoDefault.DataLayer = XpoDefault.GetDataLayer(MySqlConnectionProvider.CreateConnection(""), AutoCreateOption.None);
+            XpoDefault.DataLayer = XpoDefault.GetDataLayer(MySqlConnectionProvider.CreateConnection(Credentials.DBConnectionString), AutoCreateOption.None);
             _client = new DiscordSocketClient();
             log.Info("Logging in...");
-            await _client.LoginAsync(TokenType.Bot, "");
+            await _client.LoginAsync(TokenType.Bot, Credentials.DiscordToken);
             log.Info("Logged in");
             await _client.StartAsync();
             _handler = new CommandHandler(_client);

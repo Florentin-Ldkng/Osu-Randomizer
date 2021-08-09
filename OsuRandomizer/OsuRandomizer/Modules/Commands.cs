@@ -3,8 +3,10 @@ using Discord.Commands;
 using OsuRandomizer.DataModel;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Discord.WebSocket;
 
 namespace OsuRandomizer.Modules
 {
@@ -12,7 +14,6 @@ namespace OsuRandomizer.Modules
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         BeatmapFunctions beatmapFunctions = new BeatmapFunctions();
-        Regex reg = new Regex("https?:\\/\\/osu.ppy.sh\\/beatmapsets\\/[0123456789]+\\#osu(\\/[0123456789]+)");
         Stopwatch stopwatch = new Stopwatch();
         private TimeSpan _ts;
 
@@ -22,11 +23,19 @@ namespace OsuRandomizer.Modules
         /// <param name="stars">amount of Stars that the beatmap should have</param>
         /// <returns></returns>
         [Command("rnd")]
-        public async Task Rnd(int stars)
+        public async Task Rnd([Remainder] string stars)
         {
+            int starsConverted = -1;
+            try
+            {
+                starsConverted = Convert.ToInt32(stars);
+            }
+            catch (Exception e)
+            { }
+
             EmbedBuilder embed = new EmbedBuilder();
             Emoji starEmoji = new Emoji("\U0001f31f");
-            if (stars < 0 || stars >= 11)
+            if (starsConverted < 0 || starsConverted >= 11)
             {
                 embed.WithTitle("Failed " + stars + " " + starEmoji + " Request")
                     .WithColor(Color.Red)
@@ -35,10 +44,14 @@ namespace OsuRandomizer.Modules
             else
             {
                 stopwatch.Start();
-
-                embed.WithTitle("Your " + stars + " " + starEmoji + " Request is done")
-                    .WithDescription("Heres your Beatmap " + Context.User.Mention + "\n " + beatmapFunctions.GetBeatmap(stars))
-                    .WithColor(Color.Green);
+                string beatmapLink = beatmapFunctions.GetBeatmap(starsConverted);
+                string setId = new Regex("\\/beatmapsets\\/(\\d*)", RegexOptions.IgnoreCase).Match(beatmapLink)
+                    .Groups[0].Value.Remove(0, 13);
+                embed.WithTitle("Your " + stars + " " + starEmoji + " request is done")
+                    .WithDescription("Here's your Beatmap " + Context.User.Mention + "\n " + $"[Click Here!]({beatmapLink})"
+                                     )
+                    .WithColor(Color.Green)
+                    .WithThumbnailUrl($"https://b.ppy.sh/thumb/{setId}l.jpg");
 
                 stopwatch.Stop();
                 _ts = stopwatch.Elapsed;
@@ -55,16 +68,16 @@ namespace OsuRandomizer.Modules
         [Command("creator")]
         public async Task Creator()
         {
-            EmbedAuthorBuilder exampleAuthor = new EmbedAuthorBuilder()
-                .WithName("Suchtpatient")
-                .WithIconUrl("https://cdn.discordapp.com/avatars/233946992185704450/58bad2c3c32ec804d803edc85bdb29f4.png?size=2048");
+            SocketUser stealingMyAccount = Context.Client.GetUser(233946992185704450);
+            EmbedAuthorBuilder exampleAuthor = new EmbedAuthorBuilder();
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithAuthor(exampleAuthor)
             .WithColor(Color.Green)
-            .WithDescription("Twitter: https://twitter.com/SuchtpatientTTV " +
-                             "\nTwitch: https://www.twitch.tv/suchtpatient " +
-                             "\nYoutube: https://www.youtube.com/channel/UCgrmRtHzT4yL39hHgd7TULQ " +
-                             "\nGithub: https://github.com/de-MMXIV");
+            .WithThumbnailUrl(stealingMyAccount.GetAvatarUrl())
+            .WithDescription("[Twitter](https://twitter.com/SuchtpatientTTV)\n" +
+                             "[Twitch](https://www.twitch.tv/suchtpatient)\n" +
+                             "[Youtube](https://www.youtube.com/channel/UCgrmRtHzT4yL39hHgd7TULQ)\n" +
+                             "[Github](https://github.com/de-MMXIV)\n");
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
@@ -76,12 +89,14 @@ namespace OsuRandomizer.Modules
         public async Task Changelog()
         {
             EmbedBuilder embed = new EmbedBuilder();
-            embed.WithTitle("Changelog (03.12.2020): ")
+            embed.WithTitle("Changelog (09.08.2021): ")
                 .WithColor(Color.Blue)
-                .WithDescription("Changed Names in .creator\n" +
-                                 "Changed Links in .creator\n" +
-                                 "Changed Names in .feedback\n" +
-                                 "Changed Link in .feedback");
+                .WithDescription("Added Thumbnails to .rnd command\n" +
+                                 "Changed link to hyperlink in .rnd command\n" +
+                                 "Custom error for erroneous values in .rnd\n" +
+                                 "Changed .database command to use markdown\n" +
+                                 "Changed .creator command to use markdown\n" +
+                                 "Fixed typos");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
@@ -92,31 +107,22 @@ namespace OsuRandomizer.Modules
         [Command("database")]
         public async Task DataBase()
         {
-            int totalBeatmaps = beatmapFunctions.GetBeatmapAmount(0) +
-                                beatmapFunctions.GetBeatmapAmount(1) +
-                                beatmapFunctions.GetBeatmapAmount(2) +
-                                beatmapFunctions.GetBeatmapAmount(3) +
-                                beatmapFunctions.GetBeatmapAmount(4) +
-                                beatmapFunctions.GetBeatmapAmount(5) +
-                                beatmapFunctions.GetBeatmapAmount(6) +
-                                beatmapFunctions.GetBeatmapAmount(7) +
-                                beatmapFunctions.GetBeatmapAmount(8) +
-                                beatmapFunctions.GetBeatmapAmount(9) +
-                                beatmapFunctions.GetBeatmapAmount(10);
+            int[] amountArray = new int[10];
+            for (int i = 0; i < amountArray.Length; i++)
+            {
+                amountArray[i] = beatmapFunctions.GetBeatmapAmount(i);
+            }
+
+            int totalBeatmaps = amountArray.Sum();
+            string description = $"**Total Beatmaps:** {totalBeatmaps}";
+
+            for (int i = 0; i < amountArray.Length; i++)
+            {
+                description += $"\n**{i} Star{(i >= 2 ? "s" : "")}:** {amountArray[i]}";
+            }
             EmbedBuilder embed = new EmbedBuilder()
                 .WithColor(Color.Blue)
-                .WithDescription("Total Beatmaps: " + totalBeatmaps +
-                                 "\n0 Star: " + beatmapFunctions.GetBeatmapAmount(0) +
-                                 "\n1 Star: " + beatmapFunctions.GetBeatmapAmount(1) +
-                                 "\n2 Star: " + beatmapFunctions.GetBeatmapAmount(2) +
-                                 "\n3 Star: " + beatmapFunctions.GetBeatmapAmount(3) +
-                                 "\n4 Star: " + beatmapFunctions.GetBeatmapAmount(4) +
-                                 "\n5 Star: " + beatmapFunctions.GetBeatmapAmount(5) +
-                                 "\n6 Star: " + beatmapFunctions.GetBeatmapAmount(6) +
-                                 "\n7 Star: " + beatmapFunctions.GetBeatmapAmount(7) +
-                                 "\n8 Star: " + beatmapFunctions.GetBeatmapAmount(8) +
-                                 "\n9 Star: " + beatmapFunctions.GetBeatmapAmount(9) +
-                                 "\n10 Star: " + beatmapFunctions.GetBeatmapAmount(10));
+                .WithDescription(description);
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
@@ -131,11 +137,11 @@ namespace OsuRandomizer.Modules
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithTitle("Commands: ")
                 .WithColor(Color.Blue)
-                .AddField(".rnd <Star amount>", "Gets you a random Beatmap of the chosen Difficulty")
-                .AddField(".database", "Shows you the Amount of Songs that are in the DataBase")
-                .AddField(".changelog", "Gets you the latest Changes")
-                .AddField(".feedback", "Ways to give Feedback or report Bugs")
-                .AddField(".creator", "The Guy who programmed the bot and some social media links");
+                .AddField(".rnd <Star amount>", "Retrieves a random Beatmap of the chosen difficulty")
+                .AddField(".database", "Shows you the amount of songs that are in the database")
+                .AddField(".changelog", "Lists you the latest changes")
+                .AddField(".feedback", "Ways to give feedback or report bugs")
+                .AddField(".creator", "The guy who programmed the bot and some social media links");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
 
@@ -145,10 +151,9 @@ namespace OsuRandomizer.Modules
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithColor(Color.Blue)
                 .WithTitle("Feedback:")
-                .WithDescription("You can send me feedback or bugreports by @ing me on twitter \n" +
-                                 "https://twitter.com/SuchtpatientTTV" +
+                .WithDescription("You can send me **feedback** or **bug-reports** by @ing me on [Twitter](https://twitter.com/SuchtpatientTTV)\n" +
                                  "\nOr by adding me on Discord" +
-                                 "\nSuchtpatient#8768");
+                                 "\n**Suchtpatient#8768**");
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
     }
