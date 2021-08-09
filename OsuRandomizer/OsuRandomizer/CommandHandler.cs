@@ -1,6 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -32,7 +34,14 @@ namespace OsuRandomizer
                 var result = await _service.ExecuteAsync(context: context,argPos: argPos,services: null);
                 if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
                 {
-                    await context.Channel.SendMessageAsync(result.ErrorReason);
+                    EmbedBuilder embed = new EmbedBuilder()
+                        .WithTitle("Internal Error")
+                        .WithColor(Color.Red)
+                        .WithDescription($"Please contact **Suchtpatient#8768**!" +
+                                         $"\nPlease include this Timestamp" +
+                                         $"\n```{DateTime.Now}```");
+                    await context.Channel.SendMessageAsync(null,false,embed.Build());
+                    log.Error(result.ErrorReason);
                 }
             }
         }
