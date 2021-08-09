@@ -37,9 +37,9 @@ namespace OsuRandomizer.Modules
             Emoji starEmoji = new Emoji("\U0001f31f");
             if (starsConverted < 0 || starsConverted >= 11)
             {
-                embed.WithTitle("Failed " + stars + " " + starEmoji + " Request")
+                embed.WithTitle("Failed " + stars + " " + starEmoji + " request")
                     .WithColor(Color.Red)
-                    .WithDescription("Please enter a Star amount between 0 and 10");
+                    .WithDescription("Please enter a star amount between 0 and 10");
             }
             else
             {
@@ -48,7 +48,7 @@ namespace OsuRandomizer.Modules
                 string setId = new Regex("\\/beatmapsets\\/(\\d*)", RegexOptions.IgnoreCase).Match(beatmapLink)
                     .Groups[0].Value.Remove(0, 13);
                 embed.WithTitle("Your " + stars + " " + starEmoji + " request is done")
-                    .WithDescription("Here's your Beatmap " + Context.User.Mention + "\n " + $"[Click Here!]({beatmapLink})"
+                    .WithDescription("Here's your Beatmap " + Context.User.Mention + "\n " + $"[**Click Here!**]({beatmapLink})"
                                      )
                     .WithColor(Color.Green)
                     .WithThumbnailUrl($"https://b.ppy.sh/thumb/{setId}l.jpg");
@@ -77,7 +77,7 @@ namespace OsuRandomizer.Modules
             .WithDescription("[Twitter](https://twitter.com/SuchtpatientTTV)\n" +
                              "[Twitch](https://www.twitch.tv/suchtpatient)\n" +
                              "[Youtube](https://www.youtube.com/channel/UCgrmRtHzT4yL39hHgd7TULQ)\n" +
-                             "[Github](https://github.com/de-MMXIV)\n");
+                             "[GitHub](https://github.com/de-MMXIV)\n");
 
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
@@ -91,7 +91,7 @@ namespace OsuRandomizer.Modules
             EmbedBuilder embed = new EmbedBuilder();
             embed.WithTitle("Changelog (09.08.2021): ")
                 .WithColor(Color.Blue)
-                .WithDescription("Added Thumbnails to .rnd command\n" +
+                .WithDescription("Added thumbnails to .rnd command\n" +
                                  "Changed link to hyperlink in .rnd command\n" +
                                  "Custom error for erroneous values in .rnd\n" +
                                  "Changed .database command to use markdown\n" +
