@@ -23,6 +23,7 @@ namespace OsuRandomizer.Modules
         /// <param name="stars">amount of Stars that the beatmap should have</param>
         /// <returns></returns>
         [Command("rnd")]
+        [Alias("random")]
         public async Task Rnd([Remainder] string stars)
         {
             int starsConverted = -1;
@@ -107,7 +108,7 @@ namespace OsuRandomizer.Modules
         [Command("database")]
         public async Task DataBase()
         {
-            int[] amountArray = new int[10];
+            int[] amountArray = new int[11];
             for (int i = 0; i < amountArray.Length; i++)
             {
                 amountArray[i] = beatmapFunctions.GetBeatmapAmount(i);
