@@ -15,4 +15,4 @@ Get Osu! Randomizer [here](https://discordapp.com/oauth2/authorize?client_id=654
 
 [Logs💾](https://github.com/de-MMXIV/Osu-Randomizer/blob/master/docs/Logs.md)
 
-You can contact me on [Twitter](https://twitter.com/SuchtpatientTTV) or on Discord (Suchtpatient#8768)
+You can contact me on [Twitter](https://twitter.com/Florentin_Ldkng) or on Discord (Florentin#8768)
