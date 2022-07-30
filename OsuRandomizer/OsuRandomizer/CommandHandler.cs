@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using OsuRandomizer.Modules;
 
 namespace OsuRandomizer
 {
@@ -12,37 +13,27 @@ namespace OsuRandomizer
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private DiscordSocketClient _client;
-        private CommandService _service;
+        private Commands _commands;
         public CommandHandler(DiscordSocketClient client)
         {
             _client = client;
-            _service = new CommandService();
-            _service.AddModulesAsync(Assembly.GetEntryAssembly(), services: null);
-            _client.MessageReceived += HandleCommandAsync;
+            _commands = new Commands();
+            _client.SlashCommandExecuted += HandleSlashCommandAsync;
         }
 
-        private async Task HandleCommandAsync(SocketMessage s)
+        private async Task HandleSlashCommandAsync(SocketSlashCommand command)
         {
-            
-            var msg = s as SocketUserMessage;
-            if (msg == null) return;
-
-            var context = new SocketCommandContext(_client, msg);
-            int argPos = 0;
-            if (msg.HasCharPrefix('.',ref argPos))
+            switch (command.Data.Name)
             {
-                var result = await _service.ExecuteAsync(context: context,argPos: argPos,services: null);
-                if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
-                {
-                    EmbedBuilder embed = new EmbedBuilder()
-                        .WithTitle("Internal Error")
-                        .WithColor(Color.Red)
-                        .WithDescription($"Please contact **Suchtpatient#8768**!" +
-                                         $"\nPlease include this Timestamp" +
-                                         $"\n```{DateTime.Now}```");
-                    await context.Channel.SendMessageAsync(null,false,embed.Build());
-                    log.Error(result.ErrorReason);
-                }
+                case "creator":
+                    await _commands.CreatorCommand(command);
+                    break;
+                case "database":
+                    await _commands.DataBaseCommand(command);
+                    break;
+                case "rnd":
+                    await _commands.RndCommand(command);
+                    break;
             }
         }
     }

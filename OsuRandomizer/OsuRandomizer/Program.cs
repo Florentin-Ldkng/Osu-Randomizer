@@ -1,4 +1,5 @@
-﻿using DevExpress.Xpo;
+﻿using System;
+using DevExpress.Xpo;
 using DevExpress.Xpo.DB;
 using Discord;
 using Discord.WebSocket;
@@ -19,6 +20,7 @@ namespace OsuRandomizer
 
         public async Task StartAsync()
         {
+            
             stopwatch.Start();
             XpoDefault.DataLayer = XpoDefault.GetDataLayer(MySqlConnectionProvider.CreateConnection(Credentials.DBConnectionString), AutoCreateOption.None);
             _client = new DiscordSocketClient();
@@ -26,10 +28,36 @@ namespace OsuRandomizer
             await _client.LoginAsync(TokenType.Bot, Credentials.DiscordToken);
             log.Info("Logged in");
             await _client.StartAsync();
+            //await CreateCommands();
             _handler = new CommandHandler(_client);
             stopwatch.Stop();
             log.Info("Bot is Running after " + stopwatch.ElapsedMilliseconds + "ms of bootup");
             await Task.Delay(-1);
+        }
+
+        private async Task CreateCommands()
+        {
+            var globalCommand = new SlashCommandBuilder();
+
+            #region DatabaseCommand
+            globalCommand.WithName("database");
+            globalCommand.WithDescription("Returns the amount of Beatmaps in the database");
+            await _client.CreateGlobalApplicationCommandAsync(globalCommand.Build());
+            #endregion
+            
+            #region CreatorCommand
+            globalCommand.WithName("creator");
+            globalCommand.WithDescription("Returns the creator of the Bot");
+            await _client.CreateGlobalApplicationCommandAsync(globalCommand.Build());
+            #endregion
+
+            #region StarCommand
+           globalCommand.WithName("rnd");
+           globalCommand.WithDescription("Returns a random Beatmap of the desired difficulty");
+           globalCommand.AddOption("stars", ApplicationCommandOptionType.Integer, "The stars of the Beatmap",
+               isRequired: true, false, false, 0, 10);
+           await _client.CreateGlobalApplicationCommandAsync(globalCommand.Build());
+           #endregion
         }
     }
 }
