@@ -1,5 +1,5 @@
 # Logs💾
-Only the `.rnd` usage gets logged.  
+Only the `/rnd` usage gets logged.  
 ### Log Format:  
 Download at `DateTime` | Timing: `Timing of the Command`  
 
