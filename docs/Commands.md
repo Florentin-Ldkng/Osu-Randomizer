@@ -1,7 +1,7 @@
 # Commands💬
 #### Command:`/rnd <Stars>`
 Using this Command will post a random Beatmap of the desired difficulty.  
-`.rnd` only supports whole numbers.
+`/rnd` only supports whole numbers.
 ##### Example: `/rnd 4`
 
 #### Command: `/database`
